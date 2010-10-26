@@ -3,16 +3,29 @@
 # Placed in public domain
 # 
 
-#TODO: use the bcrypt module to implement the blowfish version (and pyDES?)
+#CHECK: use pyDES instead of the native crypt module?
 
 import os
 import time
 import hashlib
 import crypt
 
+try:
+    import bcrypt
+    _bcrypt_hashpw = bcrypt.hashpw
+except ImportError:
+    _bcrypt_hashpw = None
+
+
+class Error(Exception):
+    pass
+
 
 class PasswordHash:
     def __init__(self, iteration_count_log2=8, portable_hashes=True, algorithm=''):
+        alg = algorithm.lower()
+        if (alg == 'blowfish' or alg == 'bcrypt') and _bcrypt_hashpw is None:
+            raise Error('The bcrypt module is required')
         self.itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
         if iteration_count_log2 < 4 or iteration_count_log2 > 31:
             iteration_count_log2 = 8
@@ -127,13 +140,19 @@ class PasswordHash:
     
     def hash_password(self, pw):
         rnd = ''
-        if self.algorithm.lower() == 'blowfish' and not self.portable_hashes:
-            rnd = self.get_random_bytes(16)
-            salt = self.gensalt_blowfish(rnd)
-            hx = crypt.crypt(pw, salt)
-            if len(hx) == 60:
-                return hx
-        if self.algorithm.lower() == 'ext-des' and not self.portable_hashes:
+        alg = self.algorithm.lower()
+        if (not alg or alg == 'blowfish' or alg == 'bcrypt') \
+             and not self.portable_hashes:
+            if _bcrypt_hashpw is None:
+                if (alg == 'blowfish' or alg == 'bcrypt'):
+                    raise Error('The bcrypt module is required')
+            else:
+                rnd = self.get_random_bytes(16)
+                salt = self.gensalt_blowfish(rnd)
+                hx = _bcrypt_hashpw(pw, salt)
+                if len(hx) == 60:
+                    return hx
+        if (not alg or alg == 'ext-des') and not self.portable_hashes:
             if len(rnd) < 3:
                 rnd = self.get_random_bytes(3)
             hx = crypt.crypt(pw, self.gensalt_extended(rnd))
@@ -149,7 +168,11 @@ class PasswordHash:
     def check_password(self, pw, stored_hash):
         hx = self.crypt_private(pw, stored_hash)
         if hx.startswith('*'):
-            hx = crypt.crypt(pw, stored_hash)
+            if stored_hash.startswith('$2a$'):
+                hx = _bcrypt_hashpw(pw, stored_hash)
+            if len(hx) != len(stored_hash):
+                hx = crypt.crypt(pw, stored_hash)
+        #TODO: raise exception if the algorithm is not present
         return hx == stored_hash
     
 

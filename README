@@ -13,3 +13,6 @@ PHP version written by Solar Designer.
 Python implementation by exavolt <exavolt@gmail.com>
 
 All files within this package are in public domain.
+
+Dependencies:
+ * bcrypt http://www.mindrot.org/projects/py-bcrypt/ (optional)
