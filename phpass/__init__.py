@@ -17,15 +17,12 @@ except ImportError:
     _bcrypt_hashpw = None
 
 
-class Error(Exception):
-    pass
-
-
 class PasswordHash:
-    def __init__(self, iteration_count_log2=8, portable_hashes=True, algorithm=''):
+    def __init__(self, iteration_count_log2=8, portable_hashes=True, 
+         algorithm=''):
         alg = algorithm.lower()
         if (alg == 'blowfish' or alg == 'bcrypt') and _bcrypt_hashpw is None:
-            raise Error('The bcrypt module is required')
+            raise NotImplementedError('The bcrypt module is required')
         self.itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
         if iteration_count_log2 < 4 or iteration_count_log2 > 31:
             iteration_count_log2 = 8
@@ -145,7 +142,7 @@ class PasswordHash:
              and not self.portable_hashes:
             if _bcrypt_hashpw is None:
                 if (alg == 'blowfish' or alg == 'bcrypt'):
-                    raise Error('The bcrypt module is required')
+                    raise NotImplementedError('The bcrypt module is required')
             else:
                 rnd = self.get_random_bytes(16)
                 salt = self.gensalt_blowfish(rnd)
@@ -166,13 +163,18 @@ class PasswordHash:
         return '*'
     
     def check_password(self, pw, stored_hash):
-        hx = self.crypt_private(pw, stored_hash)
-        if hx.startswith('*'):
-            if stored_hash.startswith('$2a$'):
-                hx = _bcrypt_hashpw(pw, stored_hash)
-            if len(hx) != len(stored_hash):
-                hx = crypt.crypt(pw, stored_hash)
-        #TODO: raise exception if the algorithm is not present
+        # This part is different with the original PHP
+        if stored_hash.startswith('$2a$'):
+            # bcrypt
+            if _bcrypt_hashpw is None:
+                raise NotImplementedError('The bcrypt module is required')
+            hx = _bcrypt_hashpw(pw, stored_hash)
+        elif stored_hash.startswith('_'):
+            # ext-des
+            hx = crypt.crypt(pw, stored_hash)
+        else:
+            # portable hash
+            hx = self.crypt_private(pw, stored_hash)
         return hx == stored_hash
     
 
