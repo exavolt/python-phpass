@@ -1,5 +1,11 @@
 Portable PHP password hashing framework implemented in Python.
 
+This Python implementation meant to be and exact port of the the original PHP 
+version.
+
 The original PHP version: http://www.openwall.com/phpass/
+PHP version written by Solar Designer.
+
+Python implementation by exavolt <exavolt@gmail.com>
 
 All files within this package are in public domain.
