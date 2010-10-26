@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # 
+# phpass version: 0.3 / genuine.
+# 
 # Placed in public domain
 # 
 
