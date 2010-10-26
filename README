@@ -1,0 +1,5 @@
+Portable PHP password hashing framework implemented in Python.
+
+The original PHP version: http://www.openwall.com/phpass/
+
+All files within this package are in public domain.
