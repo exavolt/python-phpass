@@ -18,6 +18,16 @@ try:
 except ImportError:
     _bcrypt_hashpw = None
 
+_pid = 0
+
+# On App Engine, this function is not available.
+if hasattr(os, 'getpid'):
+    _pid = os.getpid()
+else:
+    # Fake PID
+    import random
+    _pid = random.randint(0, 100000)
+
 
 class PasswordHash:
     def __init__(self, iteration_count_log2=8, portable_hashes=True, 
@@ -31,7 +41,7 @@ class PasswordHash:
         self.iteration_count_log2 = iteration_count_log2
         self.portable_hashes = portable_hashes
         self.algorithm = algorithm
-        self.random_state = '%r%r' % (time.time(), os.getpid())
+        self.random_state = '%r%r' % (time.time(), _pid)
     
     def get_random_bytes(self, count):
         outp = ''
