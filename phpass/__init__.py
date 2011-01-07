@@ -12,13 +12,12 @@ import time
 import hashlib
 import crypt
 
+
 try:
     import bcrypt
     _bcrypt_hashpw = bcrypt.hashpw
 except ImportError:
     _bcrypt_hashpw = None
-
-_pid = 0
 
 # On App Engine, this function is not available.
 if hasattr(os, 'getpid'):
@@ -30,12 +29,14 @@ else:
 
 
 class PasswordHash:
+    
     def __init__(self, iteration_count_log2=8, portable_hashes=True, 
          algorithm=''):
         alg = algorithm.lower()
         if (alg == 'blowfish' or alg == 'bcrypt') and _bcrypt_hashpw is None:
             raise NotImplementedError('The bcrypt module is required')
-        self.itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+        self.itoa64 = \
+            './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
         if iteration_count_log2 < 4 or iteration_count_log2 > 31:
             iteration_count_log2 = 8
         self.iteration_count_log2 = iteration_count_log2
@@ -121,7 +122,8 @@ class PasswordHash:
         return outp
     
     def gensalt_blowfish(self, inp):
-        itoa64 = './ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+        itoa64 = \
+            './ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
         outp = '$2a$'
         outp += chr(ord('0') + self.iteration_count_log2 / 10)
         outp += chr(ord('0') + self.iteration_count_log2 % 10)
