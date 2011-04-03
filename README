@@ -1,18 +1,21 @@
 Portable PHP password hashing framework implemented in Python.
 
-This Python implementation meant to be and exact port of the the original PHP 
+This Python implementation meant to be an exact port of the the original PHP 
 version.
 
 PHPass is used by WordPress, bbPress, Vanilla Forums, PivotX and phpBB. This 
 Python port will be handy to work with user account data imported from those 
-applications (only the portable password hashes though).
+applications (only the portable password hashes though). You can also use this 
+to hash passwords in your Python applications for sure.
 
 The original PHP version: http://www.openwall.com/phpass/
 PHP version written by Solar Designer.
 
 Python implementation by exavolt <exavolt@gmail.com>
 
-All files within this package are in public domain.
+All files within this package are placed in the public domain.
+
+Patches are welcome.
 
 Dependencies:
  * bcrypt http://www.mindrot.org/projects/py-bcrypt/ (optional)
