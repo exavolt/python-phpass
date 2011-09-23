@@ -192,3 +192,15 @@ class PasswordHash:
         return hx == stored_hash
     
 
+
+if __name__ == "__main__":
+    import getpass
+    while True:
+        pw = getpass.getpass()
+        pw2 = getpass.getpass()
+        if pw == pw2:
+            break
+        print "Both passwords must be the same"
+    t_hasher = PasswordHash(8, True)
+    print "Password hash: " + t_hasher.hash_password(pw)
+
