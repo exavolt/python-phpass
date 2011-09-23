@@ -197,7 +197,7 @@ if __name__ == "__main__":
     import getpass
     while True:
         pw = getpass.getpass()
-        pw2 = getpass.getpass()
+        pw2 = getpass.getpass('Retype password: ')
         if pw == pw2:
             break
         print "Both passwords must be the same"
