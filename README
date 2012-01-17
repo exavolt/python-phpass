@@ -5,17 +5,28 @@ version.
 
 PHPass is used by WordPress, bbPress, Vanilla Forums, PivotX and phpBB. This 
 Python port will be handy to work with user account data imported from those 
-applications (only the portable password hashes though). You can also use this 
-to hash passwords in your Python applications for sure.
+applications. You can also use this to hash passwords in your Python 
+applications for sure.
 
 The original PHP version: http://www.openwall.com/phpass/
 PHP version written by Solar Designer.
 
 Python implementation by exavolt <exavolt@gmail.com>
 
-All files within this package are placed in the public domain.
+Dependencies
+------------
 
-Patches are welcome.
-
-Dependencies:
  * bcrypt http://www.mindrot.org/projects/py-bcrypt/ (optional)
+
+Unlicense
+---------
+
+This is free and unencumbered software released into the public domain.
+
+Links
+-----
+
+ * http://www.openwall.com/phpass/ - the original version in PHP
+ * http://packages.python.org/passlib/ - this all-in-one password hashing 
+   library supports phpass portable hashing algorithm as one of its 20 
+   more algorithms
