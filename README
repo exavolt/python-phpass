@@ -1,6 +1,6 @@
 Portable PHP password hashing framework implemented in Python.
 
-This Python implementation meant to be an exact port of the the original PHP 
+This Python implementation meant to be an exact port of the original PHP 
 version.
 
 PHPass is used by WordPress, bbPress, Vanilla Forums, PivotX and phpBB. This 
